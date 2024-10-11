@@ -648,11 +648,18 @@ client processes as specified in the Netplan YAML.
     > over any statically configured ones. Currently only has an effect on
     > the networkd back end.
 
+  - **`send-release`** (boolean)
+
+    > Default: `true`. When `true`, the DHCPv4 client sends a DHCP release 
+    > packet when it stops. Currently only has an effect on the networkd
+    > back end.
+
   - **`send-hostname`** (boolean)
 
     > Default: `true`. When `true`, the machine hostname will be sent
     > to the DHCP server. Currently only has an effect on the networkd
     > back end.
+
 
   - **`use-hostname`** (boolean)
 

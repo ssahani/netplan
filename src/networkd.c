@@ -805,6 +805,10 @@ combine_dhcp_overrides(const NetplanNetDefinition* def, NetplanDHCPOverrides* co
             g_set_error(error, NETPLAN_BACKEND_ERROR, NETPLAN_ERROR_VALIDATION, DHCP_OVERRIDES_ERROR, def->id, "send-hostname");
             return FALSE;
         }
+        if (def->dhcp4_overrides.send_release != def->dhcp6_overrides.send_release) {
+            g_set_error(error, NETPLAN_BACKEND_ERROR, NETPLAN_ERROR_VALIDATION, DHCP_OVERRIDES_ERROR, def->id, "send-release");
+            return FALSE;
+        }
         if (def->dhcp4_overrides.use_hostname != def->dhcp6_overrides.use_hostname) {
             g_set_error(error, NETPLAN_BACKEND_ERROR, NETPLAN_ERROR_VALIDATION, DHCP_OVERRIDES_ERROR, def->id, "use-hostname");
             return FALSE;
@@ -1084,6 +1088,13 @@ _netplan_netdef_write_network_file(
             g_string_append_printf(network, "UseHostname=false\n");
         if (combined_dhcp_overrides.hostname)
             g_string_append_printf(network, "Hostname=%s\n", combined_dhcp_overrides.hostname);
+
+       /* DHCPv4 */
+        if (def->dhcp4) {
+            g_string_append(network, "\n[DHCPv4]\n");
+            if (!combined_dhcp_overrides.send_release)
+                g_string_append_printf(network, "SendRelease=no\n");
+        }
     }
 
     /* IP-over-InfiniBand, IPoIB */

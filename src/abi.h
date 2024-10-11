@@ -66,6 +66,7 @@ typedef struct dhcp_overrides {
     gboolean use_dns;
     gboolean use_ntp;
     gboolean send_hostname;
+    gboolean send_release;
     gboolean use_hostname;
     gboolean use_mtu;
     gboolean use_routes;

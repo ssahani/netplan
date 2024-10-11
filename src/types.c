@@ -144,6 +144,7 @@ reset_dhcp_overrides(NetplanDHCPOverrides* overrides)
     FREE_AND_NULLIFY(overrides->use_domains);
     overrides->use_ntp = TRUE;
     overrides->send_hostname = TRUE;
+    overrides->send_release = TRUE;
     overrides->use_hostname = TRUE;
     overrides->use_mtu = TRUE;
     overrides->use_routes = TRUE;

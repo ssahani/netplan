@@ -480,6 +480,7 @@ write_dhcp_overrides(yaml_event_t* event, yaml_emitter_t* emitter, const char* k
         || !data->use_hostname
         || !data->use_mtu
         || !data->use_routes
+        || !data->send_release
         || data->use_domains
         || data->hostname
         || data->metric != NETPLAN_METRIC_UNSPEC) {
@@ -488,6 +489,7 @@ write_dhcp_overrides(yaml_event_t* event, yaml_emitter_t* emitter, const char* k
         YAML_BOOL_FALSE(def, event, emitter, "use-dns", data->use_dns);
         YAML_BOOL_FALSE(def, event, emitter, "use-ntp", data->use_ntp);
         YAML_BOOL_FALSE(def, event, emitter, "send-hostname", data->send_hostname);
+        YAML_BOOL_FALSE(def, event, emitter, "send-release", data->send_release);
         YAML_BOOL_FALSE(def, event, emitter, "use-hostname", data->use_hostname);
         YAML_BOOL_FALSE(def, event, emitter, "use-mtu", data->use_mtu);
         YAML_BOOL_FALSE(def, event, emitter, "use-routes", data->use_routes);

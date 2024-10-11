@@ -133,6 +133,7 @@ class NetplanV2Normalizer():
         }
         self.DEFAULT_DHCP = {
             'send-hostname': self.YAML_TRUE,
+            'send-release': self.YAML_TRUE,
             'use-dns': self.YAML_TRUE,
             'use-hostname': self.YAML_TRUE,
             'use-mtu': self.YAML_TRUE,

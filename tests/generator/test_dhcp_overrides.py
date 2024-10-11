@@ -351,6 +351,9 @@ UseMTU=true
 
     def test_dhcp_overrides_send_hostname(self):
         self.assert_dhcp_overrides_bool('send-hostname', 'SendHostname')
+    
+    def test_dhcp_overrides_send_release(self):
+        self.assert_dhcp_overrides_bool('send-release', 'SendRelease')
 
     def test_dhcp_overrides_use_hostname(self):
         self.assert_dhcp_overrides_bool('use-hostname', 'UseHostname')
