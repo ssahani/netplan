@@ -1,7 +1,7 @@
 .PHONY: clean default check linting pre-coverage
 VER = $(shell meson introspect _build/ --projectinfo | jq -r '.version' && rm -rf _build)
 
-DESTDIR ?= ../tmproot
+DESTDIR ?= /
 
 default: _build
 	meson compile -C _build --verbose

@@ -2933,6 +2933,7 @@ static const mapping_entry_handler nameservers_handlers[] = {
     {"hostname", YAML_SCALAR_NODE, {.generic=handle_netdef_str}, netdef_offset(overrides.hostname)},             \
     {"route-metric", YAML_SCALAR_NODE, {.generic=handle_netdef_guint}, netdef_offset(overrides.metric)},         \
     {"send-hostname", YAML_SCALAR_NODE, {.generic=handle_netdef_bool}, netdef_offset(overrides.send_hostname)},  \
+    {"send-release", YAML_SCALAR_NODE, {.generic=handle_netdef_bool}, netdef_offset(overrides.send_release)},  \
     {"use-dns", YAML_SCALAR_NODE, {.generic=handle_netdef_bool}, netdef_offset(overrides.use_dns)},              \
     {"use-domains", YAML_SCALAR_NODE, {.generic=handle_netdef_str}, netdef_offset(overrides.use_domains)},       \
     {"use-hostname", YAML_SCALAR_NODE, {.generic=handle_netdef_bool}, netdef_offset(overrides.use_hostname)},    \
