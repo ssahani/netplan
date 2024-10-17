@@ -1,5 +1,6 @@
 name: netplan
 version: git
+base: core22
 summary: Backend-agnostic network configuration in YAML
 description: |
   Netplan is a utility for easily configuring networking on a linux system.
@@ -7,7 +8,7 @@ description: |
   what each should be configured to do. From this description Netplan will
   generate all the necessary configuration for your chosen renderer tool.
 grade: devel
-confinement: classic
+confinement: devmode
 
 apps:
   netplan:
@@ -17,7 +18,7 @@ apps:
 
 parts:
   netplan:
-    source: https://github.com/canonical/netplan.git
+    source: https://github.com/ssahani/netplan.git
     plugin: make
     build-packages:
       - bash-completion
@@ -32,9 +33,15 @@ parts:
       - python3-netifaces
       - python3-pytest
       - python3-pytest-cov
+      - python3-cffi
+      - libcmocka-dev
       - pyflakes3
       - pep8
-      - systemd
+      - libsystemd-dev
+      - meson
+      - ninja-build
+      - build-essential
+
     stage-packages:
       - iproute2
       - python3
