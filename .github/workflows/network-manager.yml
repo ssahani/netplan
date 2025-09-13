@@ -35,12 +35,13 @@ jobs:
         run: |
           sudo add-apt-repository -y -n -s ppa:slyon/netplan-ci
           sudo apt update
-          sudo apt install autopkgtest ubuntu-dev-tools devscripts openvswitch-switch linux-modules-extra-$(uname -r)
+          sudo apt install autopkgtest dnsmasq-base ubuntu-dev-tools devscripts openvswitch-switch linux-modules-extra-$(uname -r)
       - name: Prepare test
         run: |
           pull-lp-source netplan.io
           cp -r netplan.io-*/debian .
           rm -r debian/patches/  # clear any distro patches
+          sed -i 's|systemd (>= 257.2-3ubuntu1~),|systemd (>= 248~),|g' debian/control  # see https://github.com/canonical/netplan/pull/535
           echo "3.0 (native)" > debian/source/format  # force native build
           TAG=$(git describe --tags $(git rev-list --tags --max-count=1))  # find latest (stable) tag
           REV=$(git rev-parse --short HEAD)  # get current git revision
@@ -58,7 +59,7 @@ jobs:
       # work around LP: #1878225 as fallback
       - name: Preparing autopkgtest-build-lxd
         run: |
-          sudo patch /usr/bin/autopkgtest-build-lxd .github/workflows/snapd.patch
+          sudo patch /usr/share/autopkgtest/lib/build-lxd.sh .github/workflows/snapd.patch
           MIRROR=http://archive.ubuntu.com/ubuntu autopkgtest-build-lxd ubuntu-daily:noble # LP: #2052639
       - name: Run autopkgtest
         run: |

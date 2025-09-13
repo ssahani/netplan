@@ -22,7 +22,7 @@ import tempfile
 import unittest
 
 from netplan_cli.configmanager import ConfigManager, ConfigurationError
-from netplan_cli.cli.ovs import OPENVSWITCH_OVS_VSCTL
+from netplan_cli.cli.ovs import OVS_VSCTL_PATH
 
 
 class TestConfigManager(unittest.TestCase):
@@ -230,7 +230,7 @@ class TestConfigManager(unittest.TestCase):
         self.assertIn('eth0',    state.ethernets)
         self.assertIn('eth42',   state.ethernets)
 
-    @unittest.skipIf(not os.path.exists(OPENVSWITCH_OVS_VSCTL),
+    @unittest.skipIf(not os.path.exists(OVS_VSCTL_PATH),
                      'OpenVSwitch not installed')
     def test_parse_merging_ovs(self):
         state = self.configmanager.parse(extra_config=[os.path.join(self.workdir.name, "ovs_merging.yaml")])
@@ -332,12 +332,12 @@ class TestConfigManager(unittest.TestCase):
         del self.configmanager
         self.assertFalse(os.path.exists(backup_dir))
 
-    def test__copy_tree(self):
-        self.configmanager._copy_tree(os.path.join(self.workdir.name, "etc"),
-                                      os.path.join(self.workdir.name, "etc2"))
+    def test_copy_tree(self):
+        self.configmanager.copy_tree(os.path.join(self.workdir.name, "etc"),
+                                     os.path.join(self.workdir.name, "etc2"))
         self.assertTrue(os.path.exists(os.path.join(self.workdir.name, "etc2/netplan/test.yaml")))
 
-    def test__copy_tree_missing_source(self):
+    def test_copy_tree_missing_source(self):
         with self.assertRaises(FileNotFoundError):
-            self.configmanager._copy_tree(os.path.join(self.workdir.name, "nonexistent"),
-                                          os.path.join(self.workdir.name, "nonexistent2"), missing_ok=False)
+            self.configmanager.copy_tree(os.path.join(self.workdir.name, "nonexistent"),
+                                         os.path.join(self.workdir.name, "nonexistent2"), missing_ok=False)

@@ -6,7 +6,7 @@ project('netplan', 'c',
             'warning_level=2',
             'werror=true',
         ],
-        meson_version: '>= 0.61.0',
+        meson_version: '>= 1.3.0',
 )
 
 glib = dependency('glib-2.0')
@@ -32,6 +32,8 @@ find = find_program('find')
 
 add_project_arguments(
     '-DSBINDIR="' + join_paths(get_option('prefix'), get_option('sbindir')) + '"',
+    '-DPREFIX="' + get_option('prefix') + '"',
+    '-DBINDIR="' + get_option('bindir') + '"',
     '-D_GNU_SOURCE',
     '-Wconversion',
     language: 'c')

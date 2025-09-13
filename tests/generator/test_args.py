@@ -54,6 +54,12 @@ class TestConfigArgs(TestBase):
         self.assert_nm_udev(None)
         self.assert_ovs({'cleanup.service': OVS_CLEANUP % {'iface': 'cleanup'}})
 
+    def test_generate_fails_during_try(self):
+        os.makedirs(self.rundir, mode=0o700, exist_ok=True)
+        open(os.path.join(self.rundir, "netplan-try.ready"), "w").close()
+
+        self.generate('network:\n  version: 2', expect_fail=True)
+
     def test_file_args(self):
         conf = os.path.join(self.workdir.name, 'config')
         with open(conf, 'w') as f:
@@ -207,12 +213,13 @@ class TestConfigArgs(TestBase):
             # eth99 does not exist on the system, so will not be listed
             self.assertEqual(f.read(), '''[Unit]
 ConditionPathIsSymbolicLink=/run/systemd/generator/network-online.target.wants/systemd-networkd-wait-online.service
+After=systemd-resolved.service
 
 [Service]
 ExecStart=
 ExecStart=/lib/systemd/systemd-networkd-wait-online -i eth99.43:carrier -i lo:carrier \
 -i eth99.42:carrier -i eth99.44:degraded -i bond0:degraded
-ExecStart=/lib/systemd/systemd-networkd-wait-online --any -o routable -i eth99.43 -i eth99.45 -i bond0\n''')
+ExecStart=/lib/systemd/systemd-networkd-wait-online --any --dns -o routable -i eth99.43 -i eth99.45 -i bond0\n''')
 
         # should be a no-op the second time while the stamp exists
         out = subprocess.check_output([generator, '--root-dir', self.workdir.name, outdir, outdir, outdir],
@@ -323,11 +330,12 @@ ExecStart=/lib/systemd/systemd-networkd-wait-online -i eth99.44:degraded
         with open(override, 'r') as f:
             self.assertEqual(f.read(), '''[Unit]
 ConditionPathIsSymbolicLink=/run/systemd/generator/network-online.target.wants/systemd-networkd-wait-online.service
+After=systemd-resolved.service
 
 [Service]
 ExecStart=
 ExecStart=/lib/systemd/systemd-networkd-wait-online -i br0:degraded
-ExecStart=/lib/systemd/systemd-networkd-wait-online --any -o routable -i br0
+ExecStart=/lib/systemd/systemd-networkd-wait-online --any --dns -o routable -i br0
 ''')
 
     def test_systemd_generator_noconf(self):
@@ -395,11 +403,12 @@ ExecStart=/lib/systemd/systemd-networkd-wait-online --any -o routable -i br0
             # eth99 does not exist on the system, so will not be listed
             self.assertEqual(f.read(), '''[Unit]
 ConditionPathIsSymbolicLink=/run/systemd/generator/network-online.target.wants/systemd-networkd-wait-online.service
+After=systemd-resolved.service
 
 [Service]
 ExecStart=
 ExecStart=/lib/systemd/systemd-networkd-wait-online -i a \\; b\\t; c\\t; d \\n 123 \\; echo :degraded
-ExecStart=/lib/systemd/systemd-networkd-wait-online --any -o routable -i a \\; b\\t; c\\t; d \\n 123 \\; echo \n''')
+ExecStart=/lib/systemd/systemd-networkd-wait-online --any --dns -o routable -i a \\; b\\t; c\\t; d \\n 123 \\; echo \n''')
 
         # should be a no-op the second time while the stamp exists
         out = subprocess.check_output([generator, '--root-dir', self.workdir.name, outdir, outdir, outdir],
